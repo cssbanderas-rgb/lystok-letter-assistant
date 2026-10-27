@@ -37,6 +37,13 @@ class ProviderTests(unittest.TestCase):
             with self.assertRaises(ModelError):
                 complete([])
 
+    @patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-only-placeholder"})
+    def test_non_letter_is_rejected(self):
+        data = {"choices": [{"message": {"content": "User Safety: safe"}, "finish_reason": "stop"}]}
+        with patch("urllib.request.urlopen", return_value=io.BytesIO(json.dumps(data).encode())):
+            with self.assertRaises(ModelError):
+                complete([])
+
 
 if __name__ == "__main__":
     unittest.main()

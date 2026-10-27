@@ -32,6 +32,8 @@ def complete(messages):
             raise ModelError("Відповідь не пройшла перевірку безпеки.")
         if data["choices"][0].get("finish_reason") == "length":
             raise ModelError("Модель не завершила лист. Спробуйте скоротити чернетку.")
+        if not text.strip().startswith("Тема:") or "\n" not in text.strip():
+            raise ModelError("Модель не сформувала лист у потрібному форматі. Спробуйте ще раз.")
         return text.strip()
     except urllib.error.HTTPError as error:
         if error.code in (401, 403):
